@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="full-screen" content="no">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="x5-fullscreen" content="false">
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,width=device-width,viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no"> 
+    <title>城市-区县联动</title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css"> 
+    <script type="text/javascript">
+        (function(){
+            setRem();
+            window.addEventListener('orientationchange' in window?"orientationchange":"resize",setRem);
+            function setRem(){
+                var html = document.getElementsByTagName('html')[0];
+                var pageWidth = html.getBoundingClientRect().width;
+                html.style.fontSize = pageWidth/15+'px';
+            }
+            //微信浏览器中，aler弹框不显示域名
+            //先判断是否为微信浏览器
+            var ua = window.navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+                //重写alert方法，alert()方法重写，不能传多余参数
+                window.alert = function(name){
+                    var iframe = document.createElement("IFRAME");
+                    iframe.style.display="none";
+                    iframe.setAttribute("src", 'data:text/plain');
+                    document.documentElement.appendChild(iframe);
+                    window.frames[0].window.alert(name);
+                    iframe.parentNode.removeChild(iframe);
+                }
+            }
+        })();
+    </script>
+</head>
+<body class="info-verifiy">
+    <div class="header">
+        <a class="backBtn" href="javascript:history.back(-1)"></a>
+        <h2>表单信息填写</h2>
+    </div>
+    <form class="store-info-form info-form-page">
+        <div class="li-title">
+            <i></i>
+            <h3>表单信息填写</h3>
+        </div>
+        <div class="form-item">
+            <label class="input-group">
+            XX姓名 : <span class="n-msg n-msg-username required-tip">(必填项)</span>
+            </label>
+            <div class="controls controls-store">
+                <input id="userName" type="text" name="username" maxlength="10" value="" placeholder="请输入XX姓名" />
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="input-group">
+            手机号 : <span class="n-msg n-msg-mobile required-tip">(必填项)</span>
+            </label>
+            <div class="controls controls-store">
+                <input id="mobile" type="tel" name="mobile" maxlength="11" value="" placeholder="请输入手机号" />
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="input-group">
+            XX名称 : <span class="n-msg n-msg-storename required-tip">(必填项)</span>
+            </label>
+            <div class="controls controls-storename">
+                <textarea id="storeName" name="store_name" rows="2" placeholder="请输入XX名称" maxlength="20"></textarea>
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="input-group">
+            XX电话 : <span class="n-msg n-msg-storetel required-tip">(必填项)</span>
+            </label>
+            <div class="controls controls-store controls-tel">
+                <input type="text" id="storeTel" name="store_contact" placeholder="请输入手机号/固话" maxlength="13">
+            </div>
+            <div class="tip-tel hidden">(固话格式参照: 010-69075555)</div> 
+        </div>
+        <div class="form-item">
+            <label class="input-group">
+            城市 : <span class="n-msg n-msg-city required-tip" >(必填项)</span>
+            </label>
+            <div class="controls controls-store controls-city">
+                <div class="city-wrapper">
+                    <input type="text" id="city" name="city" class="current-city" readonly placeholder="请选择">
+                    <i class="icon-down"></i>
+                </div>
+                <div class="area-wrapper">
+                    <input type="text" id="district" name="district" class="current-area" readonly placeholder="请选择">
+                    <i class="icon-down"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="input-group">
+            XX地址 : <span class="n-msg n-msg-storeaddress required-tip">(必填项)</span>
+            </label>
+            <div class="controls controls-storeadress">
+                <textarea id="storeAdress" name="store_adress" rows="4" placeholder="请输入XX地址" maxlength="50"></textarea>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="button" class="btn submit">提交</button>
+        </div>
+        <div class="protocol text-center">
+            <!-- <input id="protocolBtn" class="protocolBtn" type="checkbox" /> -->
+            <a id="protocolBtn" class="protocolBtn protocol-enter "></a>
+        </div>
+        <div class="masker hidden"></div>
+        <div class="city-box hidden">
+            <section class="express-city-box">
+                <div class="hot-city-title">
+                    <i></i>
+                    <h4>热门城市</h4>
+                </div>
+                <div id="city-sidaber" class="city-sidaber">
+                    <p>A</p><p>B</p><p>C</p><p>D</p><p>E</p><p>F</p><p>G</p><p>H</p><p>J</p><p>K</p><p>L</p><p>M</p><p>N</p><p>P</p><p>Q</p><p>R</p><p>S</p><p>T</p><p>W</p><p>X</p><p>Y</p><p>Z</p>
+                </div>
+                <div class="hot-city">
+                    <div class="hot">
+                        <a data-value="北京市">北京</a>
+                        <a data-value="上海市">上海</a>
+                        <a data-value="南京市">南京</a>
+                        <a data-value="广州市">广州</a>
+                    </div>
+                </div>
+                <article id="cityBox" class="wrapper">
+                    <section class="content">
+                    </section>
+                </article>
+            </section>
+        </div>
+        <div class="area-box hidden">
+            <div class="hot-city-title">
+                <i></i>
+                <h4>区/县</h4>
+            </div>
+            <ul class="citylist">
+                <li class="cityitem" values="朝阳区">朝阳区</li>
+            </ul>
+        </div>
+        <!-- dialog start-->
+        <div class="protocol-dialog hidden">
+            <div class="layer"></div>
+            <div class="protocol-wrapper">
+                <div class="layer-imgicon"><img src="./images/icon_user.png" alt=""></div>
+                <div class="protocol-title">
+                    <span class="titc">用户协议</span>
+                </div>
+                <div class="protocol-content">
+                    <p>特别提示</p>
+                    <p>这里写入用户协议信息</p>
+                </div>
+                <div class="protocol-btn">
+                    <a class="disagree-btn">不同意</a>
+                    <a class="agree-btn">同意</a>
+                </div>
+            </div>
+        </div>
+        <!-- dialog end-->
+    </form>
+</body>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="./js/better-scroll.js"></script>
+<script src="./js/city.js"></script>
+<script>
+    // var wechatInfo = navigator.userAgent.match(/MicroMessenger\/([\d\.]+)/i);
+    // if(wechatInfo){
+    //     $("input,textarea").blur(function(){
+    //         var currentPosition,timer;
+    //         var speed=1;//页面滚动距离
+    //         timer = setInterval(function(){
+    //             currentPosition = $('window').scrollTop();
+    //             currentPosition-=speed; 
+    //             window.scrollTo(0,currentPosition);//页面向上滚动
+    //             currentPosition+=speed; //speed变量
+    //             window.scrollTo(0,currentPosition);//页面向下滚动
+    //             clearInterval(timer);
+    //         },1);
+    //     })
+    // }
+    var validator = {
+		init: function(){
+			var _this = this;
+
+            $("input[type='text'], input[type='tel'],  input[type='password'], textarea").on('input propertychange',function() {
+                // $(this).closest(".form-item").find('.n-msg').text("").addClass("hidden");
+                $(this).closest(".form-item").find('.n-msg').removeClass('tip-active').text("(必填项)");
+                
+            });
+
+            $(".submit").on("click",function(){
+            	_this.submitFn();
+            });
+		},
+		submitFn: function(){
+			var validateUserName = this.validateUserName();
+			var validateUserMobile = this.validateUserMobile();
+			var validateStoreName = this.validateStoreName();
+			var validateStoreAdress = this.validateStoreAdress();
+			var validateStoreTel = this.validateStoreTel();
+            var validateProtocol = this.validateProtocol();
+            var validateCity = this.validateCity();
+			if( validateUserName && validateUserMobile && validateStoreName && validateStoreAdress && validateProtocol && validateCity && validateStoreTel){
+                 var value = $('.info-form-page').serialize();
+				$.ajax({
+					type:"POST",
+					url:"",
+					dataType:"json",
+					data: {
+                        "op": "post",
+						"username": $("#userName").val(),
+						"mobile": $("#mobile").val(),
+						"store_name": $("#storeName").val(),
+						"store_contact": $("#storeTel").val(),
+						"city": $("#city").val(),
+						"district": $("#district").val(),
+						"store_contact": $("#storeTel").val(),
+						"store_address": $("#storeAdress").val()
+					},
+					success: function(data){
+						if( data.type == "error" ){
+                            alert(  data.message );
+							return false;
+						}
+						if( data.type == "success" ){
+							window.location.href = data.redirect ;
+						}
+					},
+					error: function(err){
+                        alert('提交失败，请稍后重试！');
+					}
+				});
+			}
+		},
+		validateUserName: function(){
+			var userName = $('#userName').val();
+	        var flag = false;
+	        if( !$.trim(userName).length ){
+	            $('.n-msg-username').addClass('tip-active').text('请输入XX姓名');
+	            flag = false;
+	        }else{
+	            flag = true;
+	        }
+	        return flag;
+		},
+		validateUserMobile: function(){
+			var mobile = $('#mobile').val();       
+            var reg = /^1[2|3|4|5|6|7|8|9]\d{9}$/;  
+            var flag = false;
+            if(!$.trim(mobile).length){
+                $('.n-msg-mobile').addClass('tip-active').text('请输入手机号码');
+                flag = false;
+            }else{
+                if(!reg.test(mobile)){             
+                    $('.n-msg-mobile').addClass('tip-active').text('请输入正确格式的手机号码');
+                    flag = false;
+                }else{
+                    $('.n-msg-mobile').removeClass('tip-active').text('(必填项)');
+                    flag = true;
+                }
+            }
+            return flag;
+		},
+		validateStoreName: function(){
+	        var storeName = $('#storeName').val();
+	        var flag = false;
+	        if( !$.trim(storeName).length ){
+	            $('.n-msg-storename').addClass('tip-active').text('请输入XX名称');
+	            flag = false;
+	        }else{
+	            flag = true;
+	        }
+	        return flag;
+	    },
+	    validateStoreAdress: function(){
+	        var storeAdress = $('#storeAdress').val();
+	        var flag = false;
+	        if( !$.trim(storeAdress).length ){
+	            $('.n-msg-storeaddress').addClass('tip-active').text('请输XX地址');
+	            flag = false;
+	        }else{
+	            flag = true;
+	        }
+	        return flag;
+        },
+        validateStoreTel: function(){
+	        var storeTel = $('#storeTel').val();       
+            var regTel = /^1[2|3|4|5|6|7|8|9]\d{9}$/; 
+            var reg = /^\d{3,4}-\d{7,8}$/;
+            // 请参照"区号-号码"格式输入 /(\d{2,5}-\d{5,8})|(1[2|3|4|5|6|7|8|9]\d{9})/;
+            var flag = false;
+            if(!$.trim(storeTel).length){
+                $('.n-msg-storetel').addClass('tip-active').text('请输入XX电话');
+                flag = false;
+            }else{
+                if(storeTel.indexOf('-') !== -1){ // 有-是固话
+                    if(!reg.test(storeTel)){             
+                        $('.n-msg-storetel').addClass('tip-active').text('请参照"区号-号码"格式输入');
+                        flag = false;
+                    }else{
+                        $('.n-msg-storetel').removeClass('tip-active').text('(必填项)');
+                        flag = true;
+                    }
+                }else{
+                    if(!regTel.test(storeTel)){             
+                        $('.n-msg-storetel').addClass('tip-active').text('请输入正确格式的手机号码');
+                        flag = false;
+                    }else{
+                        $('.n-msg-storetel').removeClass('tip-active').text('(必填项)');
+                        flag = true;
+                    }
+                }
+            }
+            return flag;
+	    },
+	    validateProtocol: function(){
+	    	var flag = false;
+	        if( $(".protocolBtn").hasClass("protocolBtnActive") ){
+	            flag = true;
+	        }else{
+                // alert( "您还没有同意协议！" );
+                $('.protocol-dialog').removeClass('hidden');
+	            flag = false;
+	        }
+	        return flag;
+        },
+        validateCity: function(){
+			var cityValue = $('input[name="city"]').val();       
+			var areaValue = $('input[name="district"]').val();       
+            var flag = false;
+            if(!$.trim(cityValue).length || !$.trim(areaValue).length){
+                $('.n-msg-city').addClass('tip-active').text('请选择城市');
+                flag = false;
+            }else{
+                // if(!reg.test(mobile)){             
+                //     $('.n-msg-city').removeClass("hidden").text('请输入正确格式的手机号码');
+                //     flag = false;
+                // }else{
+                    // $('.n-msg-city').addClass("hidden").text('(必填项)');
+                    $('.n-msg-city').removeClass('tip-active').text('(必填项)');
+                    flag = true;
+                // }
+            }
+            return flag;
+		},
+
+	};
+    validator.init();
+    $('input[name="store_contact"]').focus(function(){
+        $('.tip-tel').removeClass('hidden');
+    })
+    // 用户协议
+	$("#protocolBtn").on("click",function(){
+		$(".protocol-dialog").removeClass("hidden");
+	});
+    // 协议弹层
+    $('.layer').on('click', function(){
+        $('.protocol-dialog').addClass('hidden');
+    })
+    // 同意/不同意
+    $('.disagree-btn').on('click', function(){
+        $("#protocolBtn").removeClass("protocolBtnActive");
+        $('.protocol-dialog').addClass('hidden');
+    })
+    $('.agree-btn').on('click', function(){
+        $("#protocolBtn").addClass("protocolBtnActive");
+        $('.protocol-dialog').addClass('hidden');
+    })
+	// 协议复选框
+	// $("#protocolBtn").on("click",function(){
+	// 	if( $(this).hasClass("protocolBtnActive") ){
+	// 		$(this).removeClass("protocolBtnActive");
+	// 		return false;
+	// 	}else{
+	// 		$(this).addClass("protocolBtnActive");
+	// 		return true;
+	// 	}
+    // });
+    var options = {
+        scrollY: true, // 因为scrollY默认为true，其实可以省略
+        scrollX: true,
+        mouseWheel: true,
+        click: true
+    }
+    var wrapper = document.querySelector('.wrapper');
+    var scroll = new BScroll(wrapper, options);
+    // 城市选择
+    $('input[name="city"]').on('click',function(){
+        $('.city-box').slideDown(500,function(){
+            scroll.refresh();
+        });
+        $('.masker').removeClass('hidden');
+    }) 
+
+    $('.masker').on('click', function(){
+        $('.masker').addClass('hidden');
+        $('.city-box').slideUp(500);
+        $('.area-box').slideUp(500);
+    })
+    $('.city-box .content').on('click', 'li',  function(e){
+        // var dataCode = e.srcElement.dataset.code;
+        // $('input[name="city"]').attr('data-cityid', dataCode);
+        $('input[name="city"]').val(e.target.innerHTML);
+        $('input[name="district"]').val('');
+        $('.city-box').slideUp(500);
+        $('.masker').addClass('hidden');
+    })
+
+    $('.hot-city').on('click', 'a',  function(e){
+        // var dataCode = e.srcElement.dataset.code;
+        // $('input[name="city"]').attr('data-cityid', dataCode);
+        $(this).addClass('active');
+        var hotValue = $(this).attr('data-value');
+        $('input[name="city"]').val(hotValue);
+        $('input[name="district"]').val('');
+        $('.city-box').slideUp(500, function(){
+            $('.hot-city a').removeClass('active');        
+        });
+        $('.masker').addClass('hidden');
+    })
+
+    $('.city-sidaber').on('click',function(e){
+        var value = e.target.innerHTML;
+        var alphabet = $('.letter-title');
+        alphabet.map(function(i,item){
+            if(item.innerHTML == value){
+                scroll.scrollToElement(item);
+            }
+        })
+    })
+
+    $('input[name="district"]').on('click',function(){
+        // 筛选
+        // var preId = $('input[name="city"]').attr('data-cityid');
+        var preValue = $('input[name="city"]').val();
+        if(preValue){
+            traverseArea(preValue);
+            $('.area-box').slideDown(500);
+            $('.masker').removeClass('hidden');
+        }
+    }) 
+
+    $('.citylist').on('click', 'li',  function(e){
+        $('input[name="district"]').val(e.target.innerHTML);
+        $('.n-msg-city').removeClass('tip-active').text("(必填项)");
+        $('.area-box').slideUp(500);
+        $('.masker').addClass('hidden');
+    })
+</script>
+</html>
